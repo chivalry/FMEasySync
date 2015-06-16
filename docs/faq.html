@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>Frequently Asked Questions</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="ua-loopback" content="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/600.6.3 (KHTML, like Gecko) Version/8.0.6 Safari/600.6.3" />
+		<meta name="mobdev-detected" content="" />		
+		<link rel="stylesheet" type="text/css" media="all" href="http://timdietrich.me/application/ui-stylesheet.css" />
+	</head>
+
+	<body>
+	
+		<div style="background: #fff; padding: 24px; border: 1px solid #8F8F8F; width: 800px; margin-left: auto; margin-right: auto; margin-top: 24px; margin-bottom: 24px; border-radius: 12px; box-shadow: 4px 4px 2px #888888;">								
+			<!-- Page Header Row -->
+<div class="header-title" style="width: 100%; text-align: left; font-size: 10pt; padding-bottom: 9px; margin-bottom: 0px; border-bottom: solid 1px #ccc;">
+				
+	<div>
+	<a href="http://timdietrich.me/" style="font-size: 18pt; font-weight: bold; text-decoration: none; color: black;">
+	Tim Dietrich</a>
+	</div>
+	<div style="margin-top: 3px;">	
+	<span style="margin-left: 0px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/index.php" class="nav_link" title="About Tim">
+	About</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/work.php" class="nav_link" title="Database Consulting">
+	Database Consulting</a></span> |
+	<!--
+	<a href="http://timdietrich.me/application/icd10.php" class="nav_link" title="ICD-10 Work">
+	ICD-10</a></span> |
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/books.php" class="nav_link" title="Tim's Books">
+	Writing</a></span> |<!--
+	<a href="http://timdietrich.me/application/courses.php" class="nav_link" title="Tim's Books">
+	Courses</a></span> |	
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://art.timdietrich.me/" class="nav_link" target="_art" title="Tim's Art">
+	Art</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/blog/" class="nav_link" title="Tim's Blog">
+	Blog</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/resources.php" class="nav_link" title="Resume, Recommended Sites, Open Source Projects, etc.">
+	Resources</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/contact.php" class="nav_link" x-style="font-weight: bold;" title="Contact Tim">
+	Contact</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/newsletter.php" class="nav_link" x-style="font-weight: bold;" title="Tim's Newsletter">
+	Newsletter</a>	
+	</span>			
+	</div>										
+</div>			
+			<div style="clear: both;"></div>
+			
+			<div style="margin-top: 18px; padding: 0px; background: #ffffff;">
+						
+								
+					<div style="width: 65%; float: left;">
+						
+<h1>FMEasySync: Frequently Asked Questions</h1>
+
+<p>
+<span style="font-weight: bold;">How does EasySync work?</span>
+</p>
+<p>
+The sync process works like this:
+<ul>
+<li>The mobile device initiates the sync process.</li>
+<li>A payload is created that contains all of the data that has been added or changed on the mobile device since the last sync.</li>
+<li>That payload is delivered to the server.</li>
+<li>A request is sent to the server to process the payload.</li>
+<li>The server receives the request, grabs the payload, and confirms that it is well formed.</li>
+<li>It then starts to apply the changes, and treats them as a transaction. If any errors are encountered, then the changes are rolled back.</li>
+<li>A response is sent back to the mobile device indicating whether the sync was successful or not.</li>
+</ul>
+</p>
+<p>
+The "pull" phase of the sync process works in a very similar way, and is essentially a mirror image of the process described above. The difference, of course, is that the server creates and delivers a payload to the mobile device, and the mobile device processes it.
+</p>
+<p>
+Also, if you have configured EasySync to handle deletions, a third phase is involved. We call this phase a "sync check," where the mobile device sends a list of record UUIDs to the server, and the server sends back a list of any UUIDs that it doesn't have, which indicates that the records have been deleted. The mobile device will then delete those records as well, helping to ensure that the mobile and hosted databases are truly in sync.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">What are the technical requirements for EasySync?</span>
+</p>
+<p>
+EasySync runs on the FileMaker 13 platform. The "hosted" database must be hosted on FileMaker Server 13. The "mobile" database needs to be run on FileMaker Go 13, FileMaker Pro 13, or FileMaker Pro Advanced 13.
+</p>
+<p>
+The reason for this is that EasySync uses several new features of the FileMaker 13 platform, including the new Base64 encoding and decoding functions and the new "Perform Script on Server" script step (which significantly improves performance).
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Are EasySync payloads XML documents?</span>
+</p>
+<p>
+At first glance, they appear to be XML documents, but they are not. The payload format is something that we designed to make it as easy as possible to build the payloads, minimize their size, and work with them after they have been transmitted.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync handle conflicts (where the same record has been updated on the mobile device and the server)?</span>
+</p>
+<p>
+It sure does. In fact, there are three methods of conflict resolution that are supported.
+<ul>
+<li>Most Recent: The most recently made changes are saved, regardless of whether they had been made on the mobile device or saved to the server. This is the default and recommended option.</li>
+<li>Client: The mobile device's changes are saved, and override any changes that had previously been saved to the server.</li>
+<li>Server: The server's changes are saved, and override any changes that had been made on the mobile device.</li>
+</ul>
+</p>
+<p>
+You can easily configure EasySync to handle conflicts. See the "EasySync Settings" script in the hosted database, and specifically the "$$conflict_handling" variable, for details.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Is there a delay between the time that a sync occurs and when changes are applied to the hosted database?</span>
+</p>
+<p>
+No. Changes are processed during the sync process. There is no scheduled script on the server that needs to run.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync handle users in multiple timezones?</span>
+</p>
+<p>
+Yes. EasySync uses UTC ("Coordinated Universal Time") timestamps. As a result, it doesn't matter what time zone the server is in or the mobile users are in. Additionally, this means that a mobile user can safely move between timezones without running into sync problems.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync handle deleted records?</span>
+</p>
+<p>
+Yes.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync support container fields?</span>
+</p>
+<p>
+Yes.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync support repeating fields?</span>
+</p>
+<p>
+Yes.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Does EasySync provide assistance with deploying upgrades?</span>
+</p>
+<p>
+Yes. EasySync integrates with EasyDeploy, an open source deployment solution. With it, you can easily deploy upgrades of your solution to your mobile users.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Is EasySync secure?</span>
+</p>
+<p>
+Yes, it is. Take a look at our <a href="http://timdietrich.me/fmeasysync/security.php">Security Overview</a> for details.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">How much does EasySync cost?</span>
+</p>
+<p>
+Nothing. EasySync is being provided via an open source license. You'll find a copy of the license in the EasySync zip file.
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">What's the catch?</span>
+</p>
+<p>
+There is none. Go ahead and <a href="http://timdietrich.me/fmeasysync/downloads.php">download EasySync</a> and give it a try. If you like it, great. If not... Well, that's okay, too!
+</p>
+
+<p style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">
+<span style="font-weight: bold;">Who developed EasySync?</span>
+</p>
+<p>
+EasySync was originally developed by <a href="http://timdietrich.me/" target="_tim">Tim Dietrich</a> 
+(a database consultant that develops custom databases using the FileMaker platform) 
+with a lot of help from the FileMaker community. (<a href="http://timdietrich.me/fmeasysync/thanks.php">Click here</a> 
+to see a list of some of the people who have played a significant role in EasySync's development.)
+</p>
+
+
+	
+					</div>				
+				
+					<div style="width: 5%; float: left;">
+						&nbsp;
+					</div>
+					
+					<div style="width: 30%; float: right;">
+						
+<div class="banner" style="x-margin-top: 72px; line-height: 1.8em; background: #eee;">
+	<div style="font-weight: bold; font-size: 12pt; margin-bottom: 9px;">EasySync Resources</div>
+	&bull; <a href="http://timdietrich.me/fmeasysync/index.php">Introduction</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/faq.php">FAQ</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/downloads.php">Downloads</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/docs.php">Documentation</a><br />											
+	&bull; <a href="http://timdietrich.me/fmeasysync/troubleshooting.php">Troubleshooting</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/security.php">Security Overview</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/issues.php">Open Issues List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/wish-list.php">Feature Wish List</a><br />
+	&bull; <a href="http://fmforums.com/forums/forum/194-fm-easysync/" target="_fmforums">Support Forum</a><br />
+	&bull; <a href="http://timdietrich.me/application/newsletter.php">Mailing List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/thanks.php">Acknowledgements</a><br />
+</div>
+
+
+<div class="banner">
+<a href="http://fmeasyweb.com">
+<img src="/application/images/fmeasyweb_logo.png" align="left" height="44" style="padding-right: 9px;" border="0" align="left"></a>
+With <a href="http://fmeasyweb.com">FMEasyWeb</a>, you'll be able to create Web-based FileMaker solutions without writing code.
+<a href="http://fmeasyweb.com">Learn more</a>.
+</div>
+
+
+
+<div class="banner">
+	<a href="/application/books.php">
+	<img src="http://timdietrich.me/application/images/fmabg_cover_2.jpg" style="max-height: 60px; padding-right: 9px;" border="0" align="left"></a>
+	My first book, 
+	<a href="/application/books.php">
+	The FileMaker Pro 13 Absolute Beginner's Guide</a>, is now available.
+</div>
+
+<div class="banner" style="min-height: 48px;">
+	<a href="http://twitter.com/tdietrich" target="_twitter">
+	<img src="http://timdietrich.me/application/images/twitter_black.png" height="42px" style="padding-right: 9px;" border="0" align="left"></a>
+	Want to know what I'm working on? Follow me on Twitter: 
+	<a href="http://twitter.com/tdietrich" target="_new">@tdietrich</a>	
+</div>
+
+					</div>
+					
+							
+				
+
+			</div>	
+			
+			<div style="clear: both;"></div>
+				
+			<div class="footer" style="margin-top: 24px; margin-bottom: 0px; border-top: solid 1px #ccc; padding-top: 18px; text-align: center; font-size: 10pt; padding-bottom: 0px;">
+	<div>
+	&copy; 2015 Tim Dietrich. 
+						
+</div>		
+			
+						
+		</div>
+		
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		  ga('create', 'UA-59558723-1', 'auto');
+		  ga('send', 'pageview');
+		
+		</script>		
+		
+	</body>
+	
+</html>

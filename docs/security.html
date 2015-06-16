@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>Security Overview</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="ua-loopback" content="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/600.6.3 (KHTML, like Gecko) Version/8.0.6 Safari/600.6.3" />
+		<meta name="mobdev-detected" content="" />		
+		<link rel="stylesheet" type="text/css" media="all" href="http://timdietrich.me/application/ui-stylesheet.css" />
+	</head>
+
+	<body>
+	
+		<div style="background: #fff; padding: 24px; border: 1px solid #8F8F8F; width: 800px; margin-left: auto; margin-right: auto; margin-top: 24px; margin-bottom: 24px; border-radius: 12px; box-shadow: 4px 4px 2px #888888;">								
+			<!-- Page Header Row -->
+<div class="header-title" style="width: 100%; text-align: left; font-size: 10pt; padding-bottom: 9px; margin-bottom: 0px; border-bottom: solid 1px #ccc;">
+				
+	<div>
+	<a href="http://timdietrich.me/" style="font-size: 18pt; font-weight: bold; text-decoration: none; color: black;">
+	Tim Dietrich</a>
+	</div>
+	<div style="margin-top: 3px;">	
+	<span style="margin-left: 0px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/index.php" class="nav_link" title="About Tim">
+	About</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/work.php" class="nav_link" title="Database Consulting">
+	Database Consulting</a></span> |
+	<!--
+	<a href="http://timdietrich.me/application/icd10.php" class="nav_link" title="ICD-10 Work">
+	ICD-10</a></span> |
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/books.php" class="nav_link" title="Tim's Books">
+	Writing</a></span> |<!--
+	<a href="http://timdietrich.me/application/courses.php" class="nav_link" title="Tim's Books">
+	Courses</a></span> |	
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://art.timdietrich.me/" class="nav_link" target="_art" title="Tim's Art">
+	Art</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/blog/" class="nav_link" title="Tim's Blog">
+	Blog</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/resources.php" class="nav_link" title="Resume, Recommended Sites, Open Source Projects, etc.">
+	Resources</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/contact.php" class="nav_link" x-style="font-weight: bold;" title="Contact Tim">
+	Contact</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/newsletter.php" class="nav_link" x-style="font-weight: bold;" title="Tim's Newsletter">
+	Newsletter</a>	
+	</span>			
+	</div>										
+</div>			
+			<div style="clear: both;"></div>
+			
+			<div style="margin-top: 18px; padding: 0px; background: #ffffff;">
+						
+								
+					<div style="width: 65%; float: left;">
+						
+<h1>FMEasySync: Security Overview</h1>
+
+<p>
+Here is a brief overview of how EasySync handles security, and why I think you can rest assured that the data being synced with EasySync is safe and secure.
+</p>
+
+<p>
+<span style="font-weight: bold;">EasySync uses FileMaker's native security model.</span> So when a user pulls data, what they will receive will depend on the permissions that you've given them. All of the EasySync scripts run with the permission set of the mobile user. In other words, none of the scripts run with "Run script with full access privileges." That applies to the scripts running on the mobile device as well those running on the server.
+</p>
+
+<p>
+<span style="font-weight: bold;">Sync traffic is encrypted.</span> If the server that you are syncing with is using the SSL encryption option, then your sync requests will be encrypted.
+</p>
+
+<p>
+<span style="font-weight: bold;">You have complete control over what data gets synced.</span> You can choose what tables are to be synced, what records are to be synced, and what fields are to be synced.
+</p>
+
+<p>
+<span style="font-weight: bold;">Sync payloads are examined prior to being processed.</span> Whether pushing or pulling data using EasySync, the payloads that are generated and transferred aren't processed until they have been evaluated and found to be "well-formed." Any partially received payloads, or payloads that are incorrectly formatted, are rejected.
+</p>
+
+<p>
+<span style="font-weight: bold;">EasySync is transactional.</span> Payloads are either fully applied, or they are completely rejected. There is no need to worry about data being partially applied. This means that mobile users who are syncing over potentially troublesome internet connections are safe, too.
+</p>
+
+<p>
+<span style="font-weight: bold;">And finally, there are also some nice security-related features built into in EasySync.</span> You can setup a "white list" and only allow syncing from mobile devices that are on that list. You can "black list" mobile devices that you do not want to sync with. And should one of your mobile devices become compromised (lost, stolen, etc), you can add it to a "wipe list," and if the device attempts to sync then any local data on it will be deleted.
+</p>
+	
+					</div>				
+				
+					<div style="width: 5%; float: left;">
+						&nbsp;
+					</div>
+					
+					<div style="width: 30%; float: right;">
+						
+<div class="banner" style="x-margin-top: 72px; line-height: 1.8em; background: #eee;">
+	<div style="font-weight: bold; font-size: 12pt; margin-bottom: 9px;">EasySync Resources</div>
+	&bull; <a href="http://timdietrich.me/fmeasysync/index.php">Introduction</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/faq.php">FAQ</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/downloads.php">Downloads</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/docs.php">Documentation</a><br />											
+	&bull; <a href="http://timdietrich.me/fmeasysync/troubleshooting.php">Troubleshooting</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/security.php">Security Overview</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/issues.php">Open Issues List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/wish-list.php">Feature Wish List</a><br />
+	&bull; <a href="http://fmforums.com/forums/forum/194-fm-easysync/" target="_fmforums">Support Forum</a><br />
+	&bull; <a href="http://timdietrich.me/application/newsletter.php">Mailing List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/thanks.php">Acknowledgements</a><br />
+</div>
+
+
+<div class="banner">
+<a href="http://fmeasyweb.com">
+<img src="/application/images/fmeasyweb_logo.png" align="left" height="44" style="padding-right: 9px;" border="0" align="left"></a>
+With <a href="http://fmeasyweb.com">FMEasyWeb</a>, you'll be able to create Web-based FileMaker solutions without writing code.
+<a href="http://fmeasyweb.com">Learn more</a>.
+</div>
+
+
+
+<div class="banner">
+	<a href="/application/books.php">
+	<img src="http://timdietrich.me/application/images/fmabg_cover_2.jpg" style="max-height: 60px; padding-right: 9px;" border="0" align="left"></a>
+	My first book, 
+	<a href="/application/books.php">
+	The FileMaker Pro 13 Absolute Beginner's Guide</a>, is now available.
+</div>
+
+<div class="banner" style="min-height: 48px;">
+	<a href="http://twitter.com/tdietrich" target="_twitter">
+	<img src="http://timdietrich.me/application/images/twitter_black.png" height="42px" style="padding-right: 9px;" border="0" align="left"></a>
+	Want to know what I'm working on? Follow me on Twitter: 
+	<a href="http://twitter.com/tdietrich" target="_new">@tdietrich</a>	
+</div>
+
+					</div>
+					
+							
+				
+
+			</div>	
+			
+			<div style="clear: both;"></div>
+				
+			<div class="footer" style="margin-top: 24px; margin-bottom: 0px; border-top: solid 1px #ccc; padding-top: 18px; text-align: center; font-size: 10pt; padding-bottom: 0px;">
+	<div>
+	&copy; 2015 Tim Dietrich. 
+						
+</div>		
+			
+						
+		</div>
+		
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		  ga('create', 'UA-59558723-1', 'auto');
+		  ga('send', 'pageview');
+		
+		</script>		
+		
+	</body>
+	
+</html>

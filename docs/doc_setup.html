@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>EasySync Setup</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="ua-loopback" content="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/600.6.3 (KHTML, like Gecko) Version/8.0.6 Safari/600.6.3" />
+		<meta name="mobdev-detected" content="" />		
+		<link rel="stylesheet" type="text/css" media="all" href="http://timdietrich.me/application/ui-stylesheet.css" />
+	</head>
+
+	<body>
+	
+		<div style="background: #fff; padding: 24px; border: 1px solid #8F8F8F; width: 800px; margin-left: auto; margin-right: auto; margin-top: 24px; margin-bottom: 24px; border-radius: 12px; box-shadow: 4px 4px 2px #888888;">								
+			<!-- Page Header Row -->
+<div class="header-title" style="width: 100%; text-align: left; font-size: 10pt; padding-bottom: 9px; margin-bottom: 0px; border-bottom: solid 1px #ccc;">
+				
+	<div>
+	<a href="http://timdietrich.me/" style="font-size: 18pt; font-weight: bold; text-decoration: none; color: black;">
+	Tim Dietrich</a>
+	</div>
+	<div style="margin-top: 3px;">	
+	<span style="margin-left: 0px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/index.php" class="nav_link" title="About Tim">
+	About</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/work.php" class="nav_link" title="Database Consulting">
+	Database Consulting</a></span> |
+	<!--
+	<a href="http://timdietrich.me/application/icd10.php" class="nav_link" title="ICD-10 Work">
+	ICD-10</a></span> |
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/books.php" class="nav_link" title="Tim's Books">
+	Writing</a></span> |<!--
+	<a href="http://timdietrich.me/application/courses.php" class="nav_link" title="Tim's Books">
+	Courses</a></span> |	
+	-->
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://art.timdietrich.me/" class="nav_link" target="_art" title="Tim's Art">
+	Art</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/blog/" class="nav_link" title="Tim's Blog">
+	Blog</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/resources.php" class="nav_link" title="Resume, Recommended Sites, Open Source Projects, etc.">
+	Resources</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/contact.php" class="nav_link" x-style="font-weight: bold;" title="Contact Tim">
+	Contact</a></span> |
+	<span style="margin-left: 3px; margin-right: 3px;">
+	<a href="http://timdietrich.me/application/newsletter.php" class="nav_link" x-style="font-weight: bold;" title="Tim's Newsletter">
+	Newsletter</a>	
+	</span>			
+	</div>										
+</div>			
+			<div style="clear: both;"></div>
+			
+			<div style="margin-top: 18px; padding: 0px; background: #ffffff;">
+						
+								
+					<div style="width: 65%; float: left;">
+						
+<h1>EasySync Setup</h1>
+
+<p>
+These instructions are designed to help you configure EasySync for use in your own FileMaker solution.
+</p>
+
+<h2 style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">Configuring Your Hosted Database</h2>
+
+<p>
+<span style="font-weight: bold;">Step 1. Add the EasySync fields to the tables that you want to sync.</span><br />
+&bull; <span style="font-weight: bold;">ES_Record_UUID</span>: Text field, Auto-Enter with calculated value: Get ( UUID )<br />
+&bull; <span style="font-weight: bold;">ES_UTC_Time</span>: Number, Auto-Enter with calculated value: Let ( trigger = GetField ( "" ); If ( IsEmpty ( $script_override ) ; Get ( CurrentTimeUTCMilliseconds ); Self ) ). Be sure to uncheck the "Do not replace existing value of field (if any)" option.<br />
+&bull; <span style="font-weight: bold;">ES_Device_ID</span>: Text, Auto-Enter with calculated value: Let ( trigger = GetField ( "" ); If ( IsEmpty ( $script_override ) ; Get ( PersistentID ); Self ) )<br />
+&bull; <span style="font-weight: bold;">ES_Account</span>: Text, Auto-Enter with Modification Account Name<br />
+&bull; <span style="font-weight: bold;">ES_Exclude</span>: Number<br />
+</p>
+<p>
+The easiest way to add the fields to tables in your database is to copy and paste the from the demo database.
+</p>
+<p>
+If there is existing data in the tables that you want to sync, then you will need to update the records in those tables so that they have values in their "ES_Record_UUID" and "ES_UTC_Time" fields. To do so:<br />
+&bull; Find all records.
+&bull; In the ES_Record_UUID, field do a "Replace Field Contents" using formula: Get ( UUID )<br />
+&bull; In the ES_UTC_Time, field do a "Replace Field Contents" using formula: Get ( CurrentTimeUTCMilliseconds )<br />
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 2. For any container fields that you want to sync, setup corresponding "B64_" fields for.</span><br />
+For example, if the container field is named "Photo_Container" then setup a new field named "B64_Photo_Container." Setup the field as a calculation with this formula: Photo_Container & "&lt;b64&gt;" & Base64Encode ( Photo_Container ) & "&lt;/b64&gt;" The calculation result should be set to Text.
+</p>
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 3. Import the "EasySync" table from the demo database into your database.</span><br />
+The "EasySync" table is identical in both databases, so it doesn't matter which database you copy the table from.
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 4. Update your relationship graph.</span><br />
+&bull; If there is an EasySync table occurrence on it, rename it to EasySync_Payloads. (If not, then add a new table occurrence, name it "EasySync_Payloads," and base it on the EasySync table.)<br />
+&bull; Add a second occurrence of the EasySync table to the graph. Call this one "EasySync_Payload_Details."<br />
+&bull; Setup a relationship between the EasySync_Payloads and EasySync_Payload_Details table occurrences. Base the relationship on: EasySync_Payloads::Payload_UUID = EasySync_Payload_Details::ES_Parent_Payload_UUID<br />
+&bull; On the EasySync_Payload_Details side of the relationship, "Allow creation of new records" and "Delete related records."<br />
+&bull; Add table occurrences for the tables that you want to sync. Name them with an ES_ prefix followed by a name that means something to you. For example, you might setup a table occurrence for "Surveys" with the name "ES_Surveys." For each of those table occurrences, setup a relationship between them and the EasySync_Payload_Details table occurrence.<br />
+&bull; Base the relationship on: EasySync_Payload_Details::ES_Child_Record_UUID = ES_Table::ES_Record_UUID. On the "ES_Table" side of the relationship, "Allow creation of new records." (Do not set the the "Delete related records" option.)<br />
+</p>
+<p>
+EasySync supports both "push-only" and "pull-only" tables. To indicate that a table is to be pushed from the mobile device, but not pulled, use an "ES_PUSH_" prefix for the table occurrence's name. To indicate that a table is to be pulled from the host, but not pushed from the mobile device, use an "ES_PULL_" prefix for the table occurrence's name.
+</p>
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 5. Import the "EasySync Server" script folder from the sample "hosted" database into your hosted database.</span><br />
+The "Import Summary" should report that 8 items were imported, with nothing renamed and no errors.
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 6. Add the "EasySync_Payloads" layout.</span><br />
+The easiest way to add the layout is to copy all of the layout objects from "EasySync_Payloads" layout in the sample hosted database. Otherwise refer to the layout in the demo database and reconstruct it.
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 7. If you are planning to use EasySync's deletion support</span>, be sure to setup layouts for each of the tables that you are syncing, and name them with an ES_ prefix.<br />
+These layouts are used by EasySync to delete records that have been deleted on the mobile device.
+</p>
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 8. Review Settings.</span><br />
+That is all that is involved in configuring your hosted database. You might want to review the hosted database's EasySync settings. (All of the settings are configured as global variables in the "EasySync Settings" script.)
+</p>
+
+
+
+
+
+<h2 style="margin-top: 36px; border-top: 1px solid #ccc; padding-top: 36px;">Configuring Your Mobile Database</h2>
+
+<p>
+<span style="font-weight: bold;">Steps 1 thru 4.</span><br />
+Repeat steps 1 thru 4 from the "Configuring the Hosted Database" instructions above.
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 5. Import the "EasySync Mobile" script folder from the sample mobile database.</span><br />
+The "Import Summary" should report that 9 items were imported, with nothing renamed, and only 1 or 2 errors encountered.
+</p>
+<p>
+If you review the errors log, you should see a message indicating that a "File reference "Hosted_Database" missing" and that the "Missing file reference "Hosted_Database" created and imported automatically."
+</p>
+<p>
+If you are not importing the EasyDeploy scripts at this time, then you might see a second error indicating that a script is missing. You can either correct those errors as well, or ignore them.
+</p>
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 6. Update the "Hosted_Database" external datasource so that points to your hosted database.</span><br />
+The datasource should automatically be setup for you (as a result of importing the scripts). However, you will need to change the "Details" of the datasource so that the path is set to your hosted database.
+</p>
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 7. Update the "Ping Server" script.</span><br />
+You will need to fix the following references to scripts that are in the hosted database:<br />
+&bull; Approximately Line 13: Perform Script on Server should point to: "Respond to Client Ping" in the "Hosted Database"<br />
+&bull; Approximately Line 17: Perform Script should point to: "Respond to Client Ping" in the "Hosted Database"
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 8. Update the "Push Payload" script.</span><br />
+You will need to fix the following references to scripts that are in the hosted database:<br />
+&bull; Approximately Line 161: Perform Script on Server should point to "Receive Payload Segment from Client" in the "Hosted Database"<br />
+&bull; Approximately Line 164: Perform Script should point to "Receive Payload Segment from Client" in the "Hosted Database"<br />
+&bull; Approximately Line 184: Perform Script on Server should point to "Process Payload from Client" in the "Hosted Database"<br />
+&bull; Approximately Line 187: Perform Script should point to "Process Payload from Client" in the "Hosted Database"
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 9. Update the "Pull Payload" script.</span><br />
+You will need to fix the following references to scripts that are in the hosted database:<br />
+&bull; Approximately Line 22: Perform Script on Server should point to "Prepare Payload for Client" in the "Hosted Database"<br />
+&bull; Approximately Line 25: Perform Script should point to "Prepare Payload for Client" in the "Hosted Database"<br />
+&bull; Approximately Line 40: Perform Script on Server should point to "Send Payload Segment to Client" in the "Hosted Database"<br />
+&bull; Approximately Line 43: Perform Script should point to "Send Payload Segment to Client" in the "Hosted Database"
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 10. Update the "Sync Check" script.</span><br />
+You will need to fix the following references to scripts that are in the hosted database:<br />
+&bull; Approximately Line 39: Perform Script on Server should point to "Sync Check" in the "Hosted Database"<br />
+&bull; Approximately Line 43: Perform Script should point to "Sync Check" in the "Hosted Database"
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 11. Setup the "EasySync_Payloads" layout.</span><br />
+The easiest way to add the layout is to copy <strong>all</strong> of the layout objects from "EasySync_Payloads" layout in the sample mobile database. 
+</p>
+<p>
+Note: In the demo database database, there are several objects on the "EasySync_Payloads" layout that are positioned off of the visible (right-hand) edge of the layout. Be sure to copy those objects as well.
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 12. If you are planning to use EasySync's deletion support...</span><br />
+Setup layouts for each of the tables that you are syncing, and name them with an ES_ prefix. These layouts are used by EasySync's "sync check" function and "wipe" functions to more efficiently delete records. 
+For the tables that you want users to be able to delete from, add "delete" buttons to your UI and wire them up to EasySync's "EasySync Delete Record" script. (Review the header comments for that script so that you can be sure that you are passing the correct parameters to it.)
+</p>
+
+
+<p style="margin-top: 36px;">
+<span style="font-weight: bold;">Step 13. Review EasySync settings.</span><br />
+You might want to take a moment to review the mobile database's EasySync settings. Like the hosted database, all of the settings for the mobile database are configured as global variables in the "EasySync Settings" script.
+</p>
+
+
+					</div>				
+				
+					<div style="width: 5%; float: left;">
+						&nbsp;
+					</div>
+					
+					<div style="width: 30%; float: right;">
+						
+<div class="banner" style="x-margin-top: 72px; line-height: 1.8em; background: #eee;">
+	<div style="font-weight: bold; font-size: 12pt; margin-bottom: 9px;">EasySync Resources</div>
+	&bull; <a href="http://timdietrich.me/fmeasysync/index.php">Introduction</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/faq.php">FAQ</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/downloads.php">Downloads</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/docs.php">Documentation</a><br />											
+	&bull; <a href="http://timdietrich.me/fmeasysync/troubleshooting.php">Troubleshooting</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/security.php">Security Overview</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/issues.php">Open Issues List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/wish-list.php">Feature Wish List</a><br />
+	&bull; <a href="http://fmforums.com/forums/forum/194-fm-easysync/" target="_fmforums">Support Forum</a><br />
+	&bull; <a href="http://timdietrich.me/application/newsletter.php">Mailing List</a><br />
+	&bull; <a href="http://timdietrich.me/fmeasysync/thanks.php">Acknowledgements</a><br />
+</div>
+
+
+<div class="banner">
+<a href="http://fmeasyweb.com">
+<img src="/application/images/fmeasyweb_logo.png" align="left" height="44" style="padding-right: 9px;" border="0" align="left"></a>
+With <a href="http://fmeasyweb.com">FMEasyWeb</a>, you'll be able to create Web-based FileMaker solutions without writing code.
+<a href="http://fmeasyweb.com">Learn more</a>.
+</div>
+
+
+
+<div class="banner">
+	<a href="/application/books.php">
+	<img src="http://timdietrich.me/application/images/fmabg_cover_2.jpg" style="max-height: 60px; padding-right: 9px;" border="0" align="left"></a>
+	My first book, 
+	<a href="/application/books.php">
+	The FileMaker Pro 13 Absolute Beginner's Guide</a>, is now available.
+</div>
+
+<div class="banner" style="min-height: 48px;">
+	<a href="http://twitter.com/tdietrich" target="_twitter">
+	<img src="http://timdietrich.me/application/images/twitter_black.png" height="42px" style="padding-right: 9px;" border="0" align="left"></a>
+	Want to know what I'm working on? Follow me on Twitter: 
+	<a href="http://twitter.com/tdietrich" target="_new">@tdietrich</a>	
+</div>
+
+					</div>
+					
+							
+				
+
+			</div>	
+			
+			<div style="clear: both;"></div>
+				
+			<div class="footer" style="margin-top: 24px; margin-bottom: 0px; border-top: solid 1px #ccc; padding-top: 18px; text-align: center; font-size: 10pt; padding-bottom: 0px;">
+	<div>
+	&copy; 2015 Tim Dietrich. 
+						
+</div>		
+			
+						
+		</div>
+		
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		
+		  ga('create', 'UA-59558723-1', 'auto');
+		  ga('send', 'pageview');
+		
+		</script>		
+		
+	</body>
+	
+</html>
